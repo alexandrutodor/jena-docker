@@ -26,13 +26,18 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 
-# Update below according to https://jena.apache.org/download/ 
-# and checksum for apache-jena-fuseki-4.x.x.tar.gz.sha512
-ENV FUSEKI_SHA512 c0b9ab61a57f2c0e027f9d1a07710a22e672eb87730a6460b0869f6a6997a2628703bd99b1590bccd38bdc2a0f78d7be17890b4b88f65ef5518c882c8736a6b3
-ENV FUSEKI_VERSION 4.0.0
-# No need for https due to sha512 checksums below
-ENV ASF_MIRROR http://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=
-ENV ASF_ARCHIVE http://archive.apache.org/dist/
+# Update below according to https://repository.apache.org/content/groups/snapshots/org/apache/jena/apache-jena-fuseki
+# and checksum for apache-jena-fuseki-4.x.x.tar.gz.sha1
+
+ENV FUSEKI_SHA1 77e5759b05d33c84e57000687db227b0fb602369
+ENV FUSEKI_VERSION 4.5.0-SNAPSHOT
+ENV FUSEKI_SNAPSHOT_ID apache-jena-fuseki-4.5.0-20220417.052430-45
+
+# No need for https due to sha1 checksums below
+# ENV ASF_MIRROR http://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename= (No mirrors for snapshots)
+# ENV ASF_ARCHIVE http://archive.apache.org/dist/
+
+ENV ASF_JENA_SNAPSHOT_REPO https://repository.apache.org/content/groups/snapshots/org/apache/jena/apache-jena-fuseki
 
 LABEL org.opencontainers.image.url https://github.com/stain/jena-docker/tree/master/jena-fuseki
 LABEL org.opencontainers.image.source https://github.com/stain/jena-docker/
@@ -51,12 +56,11 @@ ENV FUSEKI_BASE /fuseki
 ENV FUSEKI_HOME /jena-fuseki
 
 WORKDIR /tmp
-# published sha512 checksum
-RUN echo "$FUSEKI_SHA512  fuseki.tar.gz" > fuseki.tar.gz.sha512
+# published sha1 checksum
+RUN echo "$FUSEKI_SHA1  fuseki.tar.gz" > fuseki.tar.gz.sha1
 # Download/check/unpack/move in one go (to reduce image size)
-RUN     (curl --location --silent --show-error --fail --retry-connrefused --retry 3 --output fuseki.tar.gz ${ASF_MIRROR}jena/binaries/apache-jena-fuseki-$FUSEKI_VERSION.tar.gz || \
-         curl --fail --silent --show-error --retry-connrefused --retry 3 --output fuseki.tar.gz $ASF_ARCHIVE/jena/binaries/apache-jena-fuseki-$FUSEKI_VERSION.tar.gz) && \
-        sha512sum -c fuseki.tar.gz.sha512 && \
+RUN     (curl --location --silent --show-error --retry-connrefused --retry 3 --output fuseki.tar.gz $ASF_JENA_SNAPSHOT_REPO/$FUSEKI_VERSION/$FUSEKI_SNAPSHOT_ID.tar.gz) && \
+        sha1sum -c fuseki.tar.gz.sha1 && \
         tar zxf fuseki.tar.gz && \
         mv apache-jena-fuseki* $FUSEKI_HOME && \
         rm fuseki.tar.gz* && \
