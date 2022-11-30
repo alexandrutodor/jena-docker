@@ -29,9 +29,9 @@ RUN set -eux; \
 # Update below according to https://repository.apache.org/content/groups/snapshots/org/apache/jena/apache-jena-fuseki
 # and checksum for apache-jena-fuseki-4.x.x.tar.gz.sha1
 
-ENV FUSEKI_SHA1 77e5759b05d33c84e57000687db227b0fb602369
-ENV FUSEKI_VERSION 4.5.0-SNAPSHOT
-ENV FUSEKI_SNAPSHOT_ID apache-jena-fuseki-4.5.0-20220417.052430-45
+ENV FUSEKI_SHA1 fe105d15d67aa950f05a00f845c5175888c0b614
+ENV FUSEKI_VERSION 4.7.0-SNAPSHOT
+ENV FUSEKI_SNAPSHOT_ID apache-jena-fuseki-4.7.0-20221127.052459-40
 
 # No need for https due to sha1 checksums below
 # ENV ASF_MIRROR http://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename= (No mirrors for snapshots)
